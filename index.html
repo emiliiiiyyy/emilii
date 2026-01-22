@@ -20,7 +20,7 @@
       justify-content: center;
       font-family: "Tahoma";
       font-style: normal;
-      color: #FFA6E7;
+      color: #fce6f6;
       cursor: pointer;
       padding: 20px;
     }
@@ -59,12 +59,12 @@
 <body onclick="changeVibe()">
   <div class="container">
   <img id="vibeImage" src="img/1.jpeg" alt="vibe image" />
-  <h1 id="phrase">FELIZ CUMPLEAÑOS MAJITO LINDA <33 </h1>
+  <h1 id="pharase">FELIZ CUMPLEAÑOS MAJITO LINDA <33 </h1>
 </div>
 
 
 <script>
-  const phrases = [
+  const pharases = [
     "te amo con toda la vida",
     "No sabes lo feliz y orgullosa que estoy de ti",
     "Feliz vuelta al sol numero 19",
@@ -88,7 +88,7 @@
 
   ];
 
-  const phraseEl = document.getElementById("phrase");
+  const pharaseEl = document.getElementById("phrase");
   const imageEl = document.getElementById("vibeImage");
 
   // ESTADO INICIAL ESTÁ MOSTRANDO EL TEXTO
@@ -103,7 +103,7 @@
       imageEl.style.display = "block";
       showing = "image";
       
-      phraseEl.style.display = "none";
+      pharaseEl.style.display = "none";
 
       // mostrar imagen
       imageEl.src = images[Math.floor(Math.random() * images.length)];
@@ -114,9 +114,9 @@
       imageEl.style.display = "none";
 
       // mostrar texto
-      phraseEl.textContent =
-        phrases[Math.floor(Math.random() * phrases.length)];
-      phraseEl.style.display = "block";
+      pharaseEl.textContent =
+        pharases[Math.floor(Math.random() * phrases.length)];
+      pharaseEl.style.display = "block";
 
       showing = "text";
     }
@@ -125,7 +125,3 @@
 
 </body>
 </html>
-
-
-
-
