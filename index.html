@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <link rel="icon" type="image/png" href="img/1.JPG">
+   <link rel="icon" type="image/png" href="img/1.jpeg">
   <title>unclick+</title>
 
   <style>
@@ -71,19 +71,19 @@
     "Siempre sera un placer compartir unas palabras, una mirada, un momento, una vida contigo",
     "Los cumpleaños siempre han sido raros, raro el crecer, raro el paso del tiempo, nostalgicos los momentos, pero estamos",
     "Ay majito, despues de tantos años sigo sin saber como agradecerte por tanto",
-    "Gracias por ser tú, siempre tú"
+    "Gracias por ser tú, siempre tú",
     "TE AMO SIEMPRE"
 
   ];
 
   const images = [
-    "img/1.JPG",
+    "img/1.jpeg",
     "img/2.jpeg",
     "img/3.jpeg",
     "img/4.jpeg",
     "img/5.jpeg",
-    "img/6.jpg",
-    "img/7.JPG",
+    "img/6.jpeg",
+    "img/7.jpeg",
     "img/8.jpeg"
 
   ];
@@ -97,14 +97,18 @@
 
   function changeVibe() {
     if (showing === "text") {
-      // ocultar el texto
+      pharaseEl.style.display = "none"
+      // Seleccionamso imagen aleatoria
+      imageEl.src = images[Math.floor(Math.random() * images.length)];
+      imageEl.style.display = "block";
+      showing = "image";
+      
       phraseEl.style.display = "none";
 
       // mostrar imagen
       imageEl.src = images[Math.floor(Math.random() * images.length)];
       imageEl.style.display = "block";
-
-      showing = "image";
+     showing = "image";
     } else {
       // ocultar imagen
       imageEl.style.display = "none";
@@ -121,5 +125,6 @@
 
 </body>
 </html>
+
 
 
