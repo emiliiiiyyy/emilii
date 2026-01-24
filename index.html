@@ -1,15 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <link rel="icon" type="image/png" href="img/1.jpeg">
   <title>unclick+</title>
 
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -18,11 +17,12 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: "Tahoma";
-      font-style: normal;
+      font-family: 'Times New Roman', 'Chalkboard SE', cursive;
       color: #fce6f6;
       cursor: pointer;
       padding: 20px;
+      overflow: hidden;
+      user-select: none;
     }
 
     .container {
@@ -31,97 +31,187 @@
       max-width: 500px;
       padding: 24px;
       border-radius: 20px;
-      backdrop-filter: blur(10px);
     }
 
-    img {
+    img, video {
       width: 100%;
-      max-height: 300px;
+      max-height: 400px;
       object-fit: cover;
-      border-radius: 16px;
+      border-radius: 25px;
       margin-bottom: 18px;
+      border: 5px solid #000;
+      box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
+      display: none; 
     }
 
     h1 {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       line-height: 1.4;
       margin: 0;
+      font-weight: bold;
     }
 
-    p {
-      margin-top: 10px;
-      opacity: 0.6;
-      font-size: 0.8rem;
+    .icon-btn {
+      position: fixed;
+      font-size: 3rem;
+      cursor: pointer;
+      z-index: 1000;
+      filter: drop-shadow(3px 3px 0px rgba(0,0,0,0.2));
+    }
+
+    #music-toggle { bottom: 20px; left: 20px; }
+    #letter-btn { top: 20px; right: 20px; }
+
+    #letter-modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .letter-content {
+      background: #fff;
+      color: #000;
+      padding: 40px 30px;
+      border-radius: 30px;
+      max-width: 450px;
+      text-align: center;
+      border: 6px solid #000;
+      box-shadow: 15px 15px 0px #ff8fa3;
+      position: relative;
+    }
+
+    .letter-content p {
+      font-size: 1.2rem;
+      margin: 0;
+      color: #333;
+    }
+
+    .close-letter {
+      position: absolute;
+      top: 10px; right: 20px;
+      cursor: pointer;
+      font-size: 2rem;
+      font-weight: bold;
+      color: #ff4d4d;
     }
   </style>
 </head>
 
-<body onclick="changeVibe()">
-  <div class="container">
-  <img id="vibeImage" src="img/1.jpeg" alt="vibe image" />
-  <h1 id="pharase">FELIZ CUMPLEAÑOS MAJITO LINDA <33 </h1>
-</div>
+<body>
 
+  <audio id="backgroundMusic" src="musica.mp4" loop></audio>
 
-<script>
-  const pharases = [
-    "te amo con toda la vida",
-    "No sabes lo feliz y orgullosa que estoy de ti",
-    "Feliz vuelta al sol numero 19",
-    "Siempre sera un placer compartir unas palabras, una mirada, un momento, una vida contigo",
-    "Los cumpleaños siempre han sido raros, raro el crecer, raro el paso del tiempo, nostalgicos los momentos, pero estamos",
-    "Ay majito, despues de tantos años sigo sin saber como agradecerte por tanto",
-    "Gracias por ser tú, siempre tú",
-    "TE AMO SIEMPRE"
+  <div id="music-toggle" class="icon-btn" onclick="toggleMusic(event)">⭐</div>
+  <div id="letter-btn" class="icon-btn" onclick="openLetter(event)">✉️</div>
 
-  ];
+  <div class="container" onclick="changeVibe()">
+    <img id="vibeImage" src="" />
+    <video id="vibeVideo" playsinline muted loop preload="auto">
+      <source id="videoSource" src="video8.mp4" type="video/mp4">
+    </video>
+    <h1 id="phrase">FELIZ CUMPLEAÑOS MAJITO LINDA <33 <br> (Toca aquiii)</h1>
+  </div>
 
-  const images = [
-    "img/1.jpeg",
-    "img/2.jpeg",
-    "img/3.jpeg",
-    "img/4.jpeg",
-    "img/5.jpeg",
-    "img/6.jpeg",
-    "img/7.jpeg",
-    "img/8.jpeg"
+  <div id="letter-modal" onclick="closeLetter()">
+    <div class="letter-content" onclick="event.stopPropagation()">
+      <span class="close-letter" onclick="closeLetter()">×</span>
+      <p>Feliz cumpleaños lindota, te amo con todo mi corazon y realmente espero que sigamos juntas por muchos muchos cumpleaños mas, pero no solo en ellos, sino en todos los dias, gracias por ser tú. PD. espero que te haya gustado muchooo ❤️</p>
+    </div>
+  </div>
 
-  ];
+  <script>
+    const phrases = [
+      "te amo con toda la vida", "No sabes lo feliz y orgullosa que estoy de ti",
+      "Feliz vuelta al sol numero 19", "Siempre sera un placer compartir unas palabras, mirada, un momento, una vida contigo",
+      "Ay majito, despues de todo este tiempo, aun no se las palabras para agradecerte por tanto, por todo", "Gracias por ser tú, siempre tú", "TE AMO SIEMPRE"
+    ];
 
-  const pharaseEl = document.getElementById("phrase");
-  const imageEl = document.getElementById("vibeImage");
+    const images = ["1.jpeg", "2.jpeg", "3.jpeg", "4.jpeg", "5.jpeg", "6.jpeg", "7.jpeg", "8.jpeg"];
+    const videoFile = "video8.mp4";
 
-  // ESTADO INICIAL ESTÁ MOSTRANDO EL TEXTO
-  let showing = "text";
-  imageEl.style.display = "none";
+    const phraseEl = document.getElementById("phrase");
+    const imageEl = document.getElementById("vibeImage");
+    const videoEl = document.getElementById("vibeVideo");
+    const audioEl = document.getElementById("backgroundMusic");
+    
+    let masterPool = [];
+    let musicStarted = false;
 
-  function changeVibe() {
-    if (showing === "text") {
-      pharaseEl.style.display = "none"
-      // Seleccionamso imagen aleatoria
-      imageEl.src = images[Math.floor(Math.random() * images.length)];
-      imageEl.style.display = "block";
-      showing = "image";
+    function refillPool() {
+      const pool = [];
+      phrases.forEach(p => pool.push({ type: 'text', content: p }));
+      images.forEach(i => pool.push({ type: 'image', content: i }));
+      pool.push({ type: 'video', content: videoFile });
       
-      pharaseEl.style.display = "none";
-
-      // mostrar imagen
-      imageEl.src = images[Math.floor(Math.random() * images.length)];
-      imageEl.style.display = "block";
-     showing = "image";
-    } else {
-      // ocultar imagen
-      imageEl.style.display = "none";
-
-      // mostrar texto
-      pharaseEl.textContent =
-        pharases[Math.floor(Math.random() * phrases.length)];
-      pharaseEl.style.display = "block";
-
-      showing = "text";
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+      return pool;
     }
-  }
-</script>
 
+    masterPool = refillPool();
+
+    function changeVibe() {
+      if (!musicStarted) {
+        audioEl.volume = 1.0;
+        audioEl.play().catch(e => console.log("Audio esperando clic"));
+        musicStarted = true;
+      }
+
+      if (masterPool.length === 0) masterPool = refillPool();
+
+      phraseEl.style.display = "none";
+      imageEl.style.display = "none";
+      videoEl.style.display = "none";
+      videoEl.pause();
+
+      const item = masterPool.pop();
+      if (item.type === 'text') {
+        phraseEl.textContent = item.content;
+        phraseEl.style.display = "block";
+      } else if (item.type === 'image') {
+        imageEl.src = "./" + item.content;
+        imageEl.style.display = "block";
+      } else if (item.type === 'video') {
+        videoEl.style.display = "block";
+        videoEl.play().catch(() => changeVibe());
+      }
+    }
+
+    function toggleMusic(e) {
+      e.stopPropagation();
+      if (audioEl.paused) {
+        audioEl.play();
+        document.getElementById("music-toggle").textContent = "⭐";
+      } else {
+        audioEl.pause();
+        document.getElementById("music-toggle").textContent = "🌟";
+      }
+      musicStarted = true;
+    }
+
+    // FUNCIÓN:
+    function openLetter(e) {
+      e.stopPropagation();
+      document.getElementById("letter-modal").style.display = "flex";
+      
+      var end = Date.now() + (1.5 * 1000);
+      (function frame() {
+        confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#ff0000', '#ff8fa3'] });
+        confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#ff0000', '#ff8fa3'] });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      }());
+    }
+
+    function closeLetter() {
+      document.getElementById("letter-modal").style.display = "none";
+    }
+  </script>
 </body>
 </html>
